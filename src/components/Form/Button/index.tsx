@@ -7,7 +7,7 @@ import {
 } from "./style";
 
 interface Props extends TouchableOpacityProps {
-    title: String;
+    title: String
 }
 
 export function Button({ title, ...rest } : Props) {
