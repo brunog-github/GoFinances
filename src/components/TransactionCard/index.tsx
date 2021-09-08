@@ -14,10 +14,10 @@ import {
 
 export interface TransactionCardProps {
     type: 'positive' | 'negative',
-    name: String,
-    amount: String,
+    name: string,
+    amount: string,
     category: string,
-    date: String
+    date: string
 }
 
 interface Props {
