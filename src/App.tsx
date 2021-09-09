@@ -17,8 +17,10 @@ import {
 } from '@expo-google-fonts/poppins';
 
 import theme from './global/styles/theme';
-//import { Register } from './screens/Register';
+
+import { SignIn } from './screens/SignIn';
 import { AppRoutes } from './routes/app.routes';
+import { AuthProvider } from './hooks/auth';
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -35,7 +37,11 @@ export default function App() {
     <ThemeProvider theme={theme}>
       <NavigationContainer>
         <StatusBar style="light" />
-        <AppRoutes/>
+
+        <AuthProvider>
+          <SignIn/>
+        </AuthProvider>
+
       </NavigationContainer>
     </ThemeProvider>
   );

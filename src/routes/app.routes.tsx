@@ -53,7 +53,7 @@ export function AppRoutes() {
             />
 
             <Screen 
-                name="Resume"
+                name="Resumo"
                 component={Resume}
                 options={{
                     tabBarIcon: (({ size, color }) => (
