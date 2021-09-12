@@ -22,11 +22,11 @@ import {
 } from './style';
 
 export function SignIn(){
-    const { signInWithGoole } = useAuth();
+    const { signInWithGoogle } = useAuth();
     
-    async function handleSignInWithGoole() {
+    async function handleSignInWithGoogle() {
         try {
-            await signInWithGoole()
+            await signInWithGoogle()
 
         } catch(error) {
             console.log(error)
@@ -51,7 +51,7 @@ export function SignIn(){
 
             <Footer>
                 <FooterWrapper>
-                    <SignInSocialButton title="Entrar com o Google" svg={GoogleSvg} onPress={signInWithGoole}/>
+                    <SignInSocialButton title="Entrar com o Google" svg={GoogleSvg} onPress={handleSignInWithGoogle}/>
                     <SignInSocialButton title="Entrar com o Apple" svg={AppleSvg}/>
                 </FooterWrapper>
             </Footer>
