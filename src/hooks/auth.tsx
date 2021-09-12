@@ -4,11 +4,13 @@ React,
     createContext,
     ReactNode,
     useContext,
-    useState
+    useState,
+    useEffect
 } from 'react';
 
 
 import * as AuthSession from 'expo-auth-session';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface AuthProviderProps {
     children: ReactNode;
@@ -24,6 +26,8 @@ interface User {
 interface AuthContextData {
     user: User
     signInWithGoogle(): Promise<void>
+    signOut(): Promise<void>
+    userStorageLoading: boolean
 }
 
 interface AuthorizationResponse {
@@ -37,9 +41,12 @@ const AuthContext = createContext({} as AuthContextData);
 
 function AuthProvider({ children }: AuthProviderProps) {
     const [user, setUser] = useState<User>({} as User)
+    const [userStorageLoading, setUserStorageLoading] = useState(true)
 
     const { CLIENT_ID } = process.env
     const { REDIRECT_URI } = process.env
+
+    const userStorageKey = '@gofinances:user'
 
     async function signInWithGoogle() {
 
@@ -55,26 +62,48 @@ function AuthProvider({ children }: AuthProviderProps) {
                 const response = await fetch(`https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${params.access_token}`)
                 const userInfo = await response.json()
 
-                setUser({
+                
+                const userLogged = {
                     id: userInfo.id,
                     email: userInfo.email,
                     name: userInfo.name,
                     photo: userInfo.picture
-                })
-                console.log(userInfo)
+                }
+
+                setUser(userLogged)
+                await AsyncStorage.setItem(userStorageKey, JSON.stringify(userLogged))
             }
-
-
 
         } catch (error) {
             throw new Error(error)
         }
     }
 
+    async function signOut() {
+        setUser({} as User)
+        await AsyncStorage.removeItem(userStorageKey)
+    }
+
+    useEffect(() => {
+        async function loadUserStorageData() {
+            const userStoraged = await AsyncStorage.getItem(userStorageKey)
+            
+            if(userStoraged){
+                const userLogged = JSON.parse(userStoraged) as User;
+                setUser(userLogged)
+            }
+            setUserStorageLoading(false)
+        }
+
+        loadUserStorageData()
+    },[])
+
     return (
         <AuthContext.Provider value={{
             user,
-            signInWithGoogle
+            signInWithGoogle,
+            signOut,
+            userStorageLoading
         }}>
             {children}
         </AuthContext.Provider>

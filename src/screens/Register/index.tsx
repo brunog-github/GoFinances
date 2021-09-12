@@ -16,6 +16,7 @@ import uuid from 'react-native-uuid';
 
 import { useNavigation } from '@react-navigation/native';
 import { useForm } from 'react-hook-form'
+import { useAuth } from "../../hooks/auth";
 
 import { InputForm } from "../../components/Form/InputFormController";
 import { Button } from "../../components/Form/Button";
@@ -49,7 +50,7 @@ export function Register() {
     const [transactionType, setTransactionType] = useState('');
     const [categoryModalOpen, setcategoryModalOpen] = useState(false);
 
-    
+    const { user } = useAuth()
 
     const [category, setCategory] = useState({
         key: 'category',
@@ -95,7 +96,7 @@ export function Register() {
         }
         
         try {
-            const dataKey = "@gofinances:transactions";
+            const dataKey = `@gofinances:transactions_user:${user.id}`;
             
             const data = await AsyncStorage.getItem(dataKey);
             const currentData = data ? JSON.parse(data) : [];
